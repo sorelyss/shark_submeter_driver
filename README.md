@@ -56,5 +56,9 @@ register_table = {'V_AB': 1005, 'V_BC': 1007, 'V_CA': 1009,
 
 ## Setup Raspberry Pi Zero
 To launch the main.py script on each startup of the raspberry it is necessary to create a cron service. You can follow the steps of [this link](http://www.instructables.com/id/Raspberry-Pi-Launch-Python-script-on-startup/).
-To stop the service run: ```sudo /etc/init.d/cron stop```
+The crontab file should look like:
+```bash
+@reboot sh /home/pi/Documents/lab_renovables/run_main.sh >/home/pi/logs/cronlog 2>&1
+```
+
 
