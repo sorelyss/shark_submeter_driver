@@ -40,7 +40,14 @@ def send_data(measurement_type, message):
                                                                                                                measurement_type=measurement_type, 
                                                                                                                msg=message, 
                                                                                                                date=date.now())
-    return requests.get(url, auth=requests.auth.HTTPBasicAuth('admin', 'uninorte'))
+    response = requests.get(url, auth=requests.auth.HTTPBasicAuth('admin', 'uninorte'))
+    if response.status_code != 200:
+        DATA_BUFFER.append(url)
+    elif len(DATA_BUFFER)>0:
+        for data in DATA_BUFFER:
+            requests.get(data, auth=requests.auth.HTTPBasicAuth('admin', 'uninorte'))
+        DATA_BUFFER = []
+    return response
 
 
 def main(SharkMeter, data_struc):
@@ -74,6 +81,10 @@ if __name__ == "__main__":
                       'PF': 1023, 'F': 1025,
                       'E_P': 1505, 'E_Q': 1513, 'E_S': 1515
                     }
+    
+    # Data buffer that handles no internet case
+    DATA_BUFFER = []
+    
     # Create instance of SharkMeter
     SharkMeter = minimalmodbus.Instrument('/dev/serial0', 1) # port name, slave add$
 
@@ -95,4 +106,3 @@ if __name__ == "__main__":
             print('----Alert: An exception occurred. The communication was restore.----')
         else:
             time.sleep(50)
-
