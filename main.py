@@ -36,6 +36,7 @@ def get_data(variable):
 
 def send_data(measurement_type, message):
     """Send the data from SharkMeter to UniNOC"""
+    global DATA_BUFFER
     url = 'http://138.197.104.91/measurements/{meter_id}_{measurement_type}/new?{msg}&created_at={date}'.format(meter_id=METER_ID, 
                                                                                                                measurement_type=measurement_type, 
                                                                                                                msg=message, 
